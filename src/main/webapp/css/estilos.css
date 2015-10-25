@@ -1,0 +1,30 @@
+.centrado{
+    margin: 50px auto 0 auto; width: 400px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    text-align:right;
+    width:140px;
+    float:left;
+}
+
+input{
+    float:left;
+    font-size:12px;
+    padding:4px 2px;
+    border:solid 1px #aacfe4;
+    width:200px;
+    margin:2px 0 20px 10px;
+}
+
+button{
+    width:80px;
+    height:31px;
+    text-align:center;
+}
+
+.centrado div{
+    margin-left: 150px;
+}

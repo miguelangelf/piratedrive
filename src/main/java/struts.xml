@@ -5,16 +5,16 @@
 <struts>
     <constant name="struts.devMode" value="true" />
     <constant name="struts.configuration.xml.reload" value="true" />
-    <package name="learningstruts" extends="struts-default">
+    <package name="WebDrive" extends="struts-default">
         
         <action name="index">
-            <result name="success">/index2.jsp</result>
+            <result name="success">/index.jsp</result>
         </action>
         
         <action name="recibe"
-                class="mx.itesm.struts2.actions.Createuser"
+                class="mx.drive.struts2.actions.Registro"
                 method="execute">
-            <result name="success">/welcome.jsp</result>
+            <result name="success">/tester.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
     </package>
