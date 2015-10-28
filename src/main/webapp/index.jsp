@@ -13,17 +13,16 @@
         <link rel="stylesheet" type="text/css" href="css/estilos.css" media="screen" />
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <title>Index</title>
-    </head>
-    <body>
         
-        <div class="centrado">
-           <h1>¡Bienvenido a AshoDrive!</h1>
+    </head>
+    <body background="slide-3.jpg">
+        <div class="carousel">
+            <h1><font color="red"> ¡Bienvenido a AshoDrive!</font></h1>
            <form method="POST">
                <label for="user"> Usuario: </label> <input type="text" name="usuario"/>
                <label for="pass"> Contraseña: </label> <input type="password" name="contraseña"/>
                <button class="btn btn-danger" type="submit"> Entrar </button>
            </form>
         </div>
-        
     </body>
 </html>
