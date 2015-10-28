@@ -8,25 +8,27 @@ package mx.drive.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import mx.drive.beans.BeanDescriptor;
 import mx.drive.dao.DriveModel;
+import mx.drive.dao.HashGen;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
  * @author miguel
  */
-@WebServlet(name = "GetFilesController", urlPatterns = {"/GetFilesController"})
-public class GetFilesController extends HttpServlet {
+@WebServlet(name = "ShareWith", urlPatterns = {"/ShareWith"})
+public class ShareWith extends HttpServlet {
+
+    private org.apache.logging.log4j.Logger logger = LogManager.getLogger(ShareWith.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,27 +43,12 @@ public class GetFilesController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        HttpSession session = request.getSession(true);
-
-        int param=-1;
-
-        if (session.getAttribute("userid") != null) {
-            param = (int) session.getAttribute("userid");
-        }
+        String correo = request.getParameter("correo");
+        String fileid = request.getParameter("fileid");
+        HashGen hs = new HashGen();
         
-        DriveModel dm = new DriveModel();
-        ArrayList<BeanDescriptor> files = null;
 
-        try {
-            files = dm.getListofFiles(param);
-        } catch (SQLException ex) {
-            Logger.getLogger(GetFilesController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String forward = "tableFiles.jsp";
-        request.setAttribute("files", files);
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
+        hs.sharewith(correo, Integer.parseInt(fileid));
 
     }
 

@@ -7,26 +7,21 @@ package mx.drive.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import mx.drive.beans.BeanDescriptor;
-import mx.drive.dao.DriveModel;
+import mx.drive.dao.HashGen;
 
 /**
  *
  * @author miguel
  */
-@WebServlet(name = "GetFilesController", urlPatterns = {"/GetFilesController"})
-public class GetFilesController extends HttpServlet {
+@WebServlet(name = "FriendsSharing", urlPatterns = {"/FriendsSharing"})
+public class FriendsSharing extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,28 +36,17 @@ public class GetFilesController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        HttpSession session = request.getSession(true);
+        String fileid = request.getParameter("fileid");
+        HashGen hs = new HashGen();
+        String friends = hs.getFriends(Integer.parseInt(fileid));
 
-        int param=-1;
+        JsonObject jo = Json.createObjectBuilder()
+                .add("friends", friends)
+                .build();
 
-        if (session.getAttribute("userid") != null) {
-            param = (int) session.getAttribute("userid");
-        }
-        
-        DriveModel dm = new DriveModel();
-        ArrayList<BeanDescriptor> files = null;
-
-        try {
-            files = dm.getListofFiles(param);
-        } catch (SQLException ex) {
-            Logger.getLogger(GetFilesController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String forward = "tableFiles.jsp";
-        request.setAttribute("files", files);
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
-
+        PrintWriter out = response.getWriter();
+        out.print(jo.toString());
+        out.flush();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

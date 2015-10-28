@@ -7,26 +7,19 @@ package mx.drive.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import mx.drive.beans.BeanDescriptor;
-import mx.drive.dao.DriveModel;
 
 /**
  *
  * @author miguel
  */
-@WebServlet(name = "GetFilesController", urlPatterns = {"/GetFilesController"})
-public class GetFilesController extends HttpServlet {
+@WebServlet(name = "Login", urlPatterns = {"/Login"})
+public class Login extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,29 +33,30 @@ public class GetFilesController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String correo = request.getParameter("correo");
+        String password = request.getParameter("password");
+        boolean validuser = false;
+
+        mx.drive.dao.Login login = new mx.drive.dao.Login();
+        validuser = login.makeLogin(correo, password);
 
         HttpSession session = request.getSession(true);
 
-        int param=-1;
+        if (validuser) {
 
-        if (session.getAttribute("userid") != null) {
-            param = (int) session.getAttribute("userid");
-        }
-        
-        DriveModel dm = new DriveModel();
-        ArrayList<BeanDescriptor> files = null;
+            int uid=login.userid;
+            session.setAttribute("userid",uid);
 
-        try {
-            files = dm.getListofFiles(param);
-        } catch (SQLException ex) {
-            Logger.getLogger(GetFilesController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        String forward = "tableFiles.jsp";
-        request.setAttribute("files", files);
-        RequestDispatcher view = request.getRequestDispatcher(forward);
-        view.forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            if (validuser) {
+                out.print("usuario valido, tu id es: "+session.getAttribute("userid"));
+            } else {
+                out.print("Usuario invalido");
+            }
 
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
