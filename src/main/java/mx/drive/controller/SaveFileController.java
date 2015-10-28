@@ -21,6 +21,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import mx.drive.beans.BeanDescriptor;
 import mx.drive.dao.DriveModel;
@@ -120,8 +121,9 @@ public class SaveFileController extends HttpServlet {
         } catch (FileUploadException ex) {
             logger.error("Error al realizar el request: " + ex.toString());
         }
+        HttpSession session = request.getSession(true);
         
-        bdr.setFk_usuario(1);
+        bdr.setFk_usuario((int)session.getAttribute("userid"));
         logger.info("Se guardo el archivo: "+bdr.getNombre());
 
         DriveModel dm = new DriveModel();

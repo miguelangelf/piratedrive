@@ -4,6 +4,15 @@
     Author     : miguel
 --%>
 
+
+<%
+
+    if (session.getAttribute("userid") == null) {
+
+        //response.sendRedirect(response.encodeRedirectURL("index.jsp"));
+    }
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="share.jsp" />
 
@@ -13,15 +22,11 @@
         <script src="js/jquery-2.1.4.js"></script>
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="css/toggles-full.css" rel="stylesheet">
-        <link href="css/toggles.css" rel="stylesheet">
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <script src="js/bootstrap.min.js"></script>
 
 
-        <script src="js/wrap.js"></script>
-        <script src="js/Toggles.js"></script>
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -30,6 +35,7 @@
 
         <div class="container">
             <h1>Pirate Drive</h1>
+            <a href="DestroySession"><h4>Logout</h4></a>
             <hr/>
             <div id="lista"></div>
         </div>

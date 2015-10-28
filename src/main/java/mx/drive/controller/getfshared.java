@@ -12,14 +12,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import mx.drive.dao.HashGen;
 
 /**
  *
  * @author miguel
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "getfshared", urlPatterns = {"/download"})
+public class getfshared extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,31 +33,18 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String correo = request.getParameter("correo");
-        String password = request.getParameter("password");
-        boolean validuser = false;
 
-        mx.drive.dao.Login login = new mx.drive.dao.Login();
-        validuser = login.makeLogin(correo, password);
+        String hash = request.getParameter("code");
+        HashGen hs = new HashGen();
+        boolean resp = hs.downloadfromshared(hash);
 
-        HttpSession session = request.getSession(true);
-
-        if (validuser) {
-
-            int uid = login.userid;
-            session.setAttribute("userid", uid);
+        if (resp) {
+            int id = hs.thefileid;
+             response.sendRedirect("DownloadFile?fileid=" + id);
+        } else {
+            response.sendRedirect("error.jsp");
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            if (validuser) {
-                request.setAttribute("resultado", "ok");
-                request.getRequestDispatcher("listfiles.jsp").forward(request, response);
-            } else {
-                request.setAttribute("resultado", "error");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            }
-
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

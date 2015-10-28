@@ -7,19 +7,22 @@ package mx.drive.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import mx.drive.dao.HashGen;
 
 /**
  *
  * @author miguel
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "ShareableLink", urlPatterns = {"/ShareableLink"})
+public class ShareableLink extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,30 +36,49 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String correo = request.getParameter("correo");
-        String password = request.getParameter("password");
-        boolean validuser = false;
-
-        mx.drive.dao.Login login = new mx.drive.dao.Login();
-        validuser = login.makeLogin(correo, password);
-
+        /* TODO output your page here. You may use following sample code. */
+        String share = request.getParameter("share");
         HttpSession session = request.getSession(true);
+        String fileid = request.getParameter("fileid");
+        HashGen hs = new HashGen();
 
-        if (validuser) {
+        if (share.equals("check")) {
+            boolean resp = hs.checkifshareable(Integer.parseInt(fileid));
+            JsonObject jo = Json.createObjectBuilder()
+                    .add("result", resp)
+                    .build();
 
-            int uid = login.userid;
-            session.setAttribute("userid", uid);
+            PrintWriter out = response.getWriter();
+            out.print(jo.toString());
+            out.flush();
+            return;
         }
 
-        try (PrintWriter out = response.getWriter()) {
-            if (validuser) {
-                request.setAttribute("resultado", "ok");
-                request.getRequestDispatcher("listfiles.jsp").forward(request, response);
-            } else {
-                request.setAttribute("resultado", "error");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            }
+        if (share.equals("true")) {
+            boolean isshared = hs.checkifshareable(Integer.parseInt(fileid));
+            if (!isshared) {
+                boolean resp = hs.makeitshareable((int) session.getAttribute("userid"), Integer.parseInt(fileid));
+                JsonObject jo = Json.createObjectBuilder()
+                        .add("result", "se compartio")
+                        .build();
 
+                PrintWriter out = response.getWriter();
+                out.print(jo.toString());
+                out.flush();
+                return;
+            } else {
+
+                boolean resp = hs.makeitprivate(Integer.parseInt(fileid));
+                JsonObject jo = Json.createObjectBuilder()
+                        .add("result", "se borro")
+                        .build();
+
+                PrintWriter out = response.getWriter();
+                out.print(jo.toString());
+                out.flush();
+                return;
+
+            }
         }
     }
 

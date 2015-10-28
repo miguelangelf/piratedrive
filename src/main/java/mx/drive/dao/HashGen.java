@@ -26,6 +26,8 @@ public class HashGen {
 
     private org.apache.logging.log4j.Logger logger = LogManager.getLogger(HashGen.class.getName());
 
+    public int thefileid=-1;
+
     public boolean validateOwner(int userid, int fileid) throws SQLException {
         String query = "Select nombre from Descriptor where fk_usuario=? AND id=?";
         Connection con = Conexion.getConexion();
@@ -39,7 +41,81 @@ public class HashGen {
             cantidad++;
         }
         return cantidad == 1;
+    }
 
+    public boolean downloadfromshared(String hash) {
+        String query = "Select fk_descriptor from Compartido where hash=?";
+        Connection con = Conexion.getConexion();
+        try {
+            PreparedStatement pstm = con.prepareStatement(query);
+            pstm.setString(1, hash);
+
+            ResultSet res = pstm.executeQuery();
+            if (res.next()) {
+                thefileid=res.getInt("fk_descriptor");
+            }
+            return thefileid != -1;
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+
+    }
+
+    public boolean makeitshareable(int userid, int fileid) {
+        String hash = genhash(userid, fileid);
+        String query = "Insert INTO Compartido values (?,?)";
+        Connection con = Conexion.getConexion();
+        PreparedStatement pstm = null;
+        try {
+            pstm = con.prepareStatement(query);
+            pstm.setInt(2, fileid);
+            pstm.setString(1, hash);
+            int row = pstm.executeUpdate();
+            return true;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean checkifshareable(int fileid) {
+        String query = "Select Count(*) from Compartido where fk_descriptor=?";
+        Connection con = Conexion.getConexion();
+        PreparedStatement pstm = null;
+        try {
+
+            pstm = con.prepareStatement(query);
+            pstm.setInt(1, fileid);
+            ResultSet res = pstm.executeQuery();
+            int counter = 0;
+            if (res.next()) {
+                counter = res.getInt(1);
+            }
+
+            if (counter == 1) {
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean makeitprivate(int fileid) {
+        String query = "Delete from Compartido where fk_descriptor=?";
+        Connection con = Conexion.getConexion();
+        PreparedStatement pstm = null;
+        try {
+
+            pstm = con.prepareStatement(query);
+            pstm.setInt(1, fileid);
+            int row = pstm.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String genhash(int userid, int fileid) {
@@ -59,7 +135,7 @@ public class HashGen {
             ResultSet res = pstm.executeQuery();
             int userid = -1;
             while (res.next()) {
-                friends+=res.getString("correo")+"&&";
+                friends += res.getString("correo") + "&&";
             }
             return friends;
         } catch (SQLException ex) {
@@ -69,8 +145,11 @@ public class HashGen {
 
     }
 
-    public boolean sharewith(String correo, int fileid) {
+    public boolean sharewith(String correo, int fileid, int currentUser) {
         String query = "Select id from Usuario where correo=?";
+        if (correo.isEmpty()) {
+            return false;
+        }
         Connection con = Conexion.getConexion();
         PreparedStatement pstm = null;
         try {
@@ -82,16 +161,20 @@ public class HashGen {
             if (res.next()) {
                 userid = res.getInt("id");
             }
+
+            if (currentUser == userid) {
+                return false;
+            }
             String query2 = "Insert INTO Puedever VALUES (?,?)";
             pstm = con.prepareStatement(query2);
             pstm.setInt(1, fileid);
             pstm.setInt(2, userid);
             int row = pstm.executeUpdate();
+            return true;
         } catch (SQLException ex) {
             logger.info(ex.toString());
+            return false;
         }
-
-        return true;
 
     }
 

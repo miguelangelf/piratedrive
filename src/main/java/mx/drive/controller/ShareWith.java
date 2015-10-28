@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import mx.drive.dao.DriveModel;
 import mx.drive.dao.HashGen;
 import org.apache.logging.log4j.LogManager;
@@ -43,13 +44,19 @@ public class ShareWith extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
+        HttpSession session = request.getSession(true);
         String correo = request.getParameter("correo");
         String fileid = request.getParameter("fileid");
         HashGen hs = new HashGen();
-        
 
-        hs.sharewith(correo, Integer.parseInt(fileid));
+        boolean resp=hs.sharewith(correo, Integer.parseInt(fileid), (int) session.getAttribute("userid"));
+        JsonObject jo = Json.createObjectBuilder()
+                .add("success", resp)
+                .build();
 
+        PrintWriter out = response.getWriter();
+        out.print(jo.toString());
+        out.flush();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -18,8 +18,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author miguel
  */
-@WebServlet(name = "Login", urlPatterns = {"/Login"})
-public class Login extends HttpServlet {
+@WebServlet(name = "DestroySession", urlPatterns = {"/DestroySession"})
+public class DestroySession extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,31 +33,9 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String correo = request.getParameter("correo");
-        String password = request.getParameter("password");
-        boolean validuser = false;
-
-        mx.drive.dao.Login login = new mx.drive.dao.Login();
-        validuser = login.makeLogin(correo, password);
-
         HttpSession session = request.getSession(true);
-
-        if (validuser) {
-
-            int uid = login.userid;
-            session.setAttribute("userid", uid);
-        }
-
-        try (PrintWriter out = response.getWriter()) {
-            if (validuser) {
-                request.setAttribute("resultado", "ok");
-                request.getRequestDispatcher("listfiles.jsp").forward(request, response);
-            } else {
-                request.setAttribute("resultado", "error");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            }
-
-        }
+        session.invalidate();
+        response.sendRedirect("index.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
