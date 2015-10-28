@@ -49,7 +49,27 @@ public class DriveModel {
 
     public ArrayList<BeanDescriptor> getListofFiles(int usuario) throws SQLException {
         ArrayList<BeanDescriptor> files = new ArrayList<>();
-        String query = "Select * from Descriptor where fk_usuario=?";
+        String query = "Select * from Descriptor where Descriptor.fk_usuario=?  ";
+        Connection con = Conexion.getConexion();
+        PreparedStatement pstm = con.prepareStatement(query);
+        pstm.setInt(1, usuario);
+        ResultSet res = pstm.executeQuery();
+        while (res.next()) {
+            int id = res.getInt("id");
+            int fk_usuario = res.getInt("fk_usuario");
+            String mime = res.getString("mime");
+            String extension = res.getString("extension");
+            String nombre = res.getString("nombre");
+            String tamano = res.getString("tamano");
+            BeanDescriptor bdr = new BeanDescriptor(id, fk_usuario, mime, extension, nombre, tamano);
+            files.add(bdr);
+        }
+        return files;
+    }
+
+    public ArrayList<BeanDescriptor> sharedWithMe(int usuario) throws SQLException {
+        ArrayList<BeanDescriptor> files = new ArrayList<>();
+        String query = "Select id,nombre,mime,extension,tamano,Descriptor.fk_usuario from Descriptor,Puedever where Puedever.fk_usuario=? and Puedever.fk_archivo = Descriptor.id    ";
         Connection con = Conexion.getConexion();
         PreparedStatement pstm = con.prepareStatement(query);
         pstm.setInt(1, usuario);
@@ -173,13 +193,13 @@ public class DriveModel {
         String extension = res.getString("extension");
         String nombre = res.getString("nombre");
         String tamano = res.getString("tamano");
-        
+
         bdr.setExtension(extension);
         bdr.setFile(thefile.getBinaryStream());
         bdr.setMime(mime);
         bdr.setNombre(nombre);
         bdr.setTamano(tamano);
-        
+
         return bdr;
 
     }

@@ -122,12 +122,14 @@ public class SaveFileController extends HttpServlet {
             logger.error("Error al realizar el request: " + ex.toString());
         }
         HttpSession session = request.getSession(true);
-        
-        bdr.setFk_usuario((int)session.getAttribute("userid"));
-        logger.info("Se guardo el archivo: "+bdr.getNombre());
+
+        bdr.setFk_usuario((int) session.getAttribute("userid"));
+        logger.info("Se guardo el archivo: " + bdr.getNombre());
 
         DriveModel dm = new DriveModel();
         dm.insertFile(bdr);
+
+        request.getRequestDispatcher("listfiles.jsp").forward(request, response);
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -36,6 +36,14 @@
         <div class="container">
             <h1>Pirate Drive</h1>
             <a href="DestroySession"><h4>Logout</h4></a>
+
+            <button type="button" onclick="mios();" class="btn btn-link">Mis archivos</button>
+            <button type="button" onclick="tuyos();" class="btn btn-link">Compartido Conmigo</button>
+            <form action="SaveFileController" method="post" enctype="multipart/form-data">
+                
+                <input type="file" name="file" id="fileToUpload">
+                <input type="submit" value="Upload Image" name="submit">
+            </form>
             <hr/>
             <div id="lista"></div>
         </div>
@@ -56,6 +64,24 @@
         });
 
     }
+
+    function mios()
+    {
+        $.post("GetFilesController", {userid: 1}, function (data, status) {
+            $("#lista").html(data);
+        });
+
+    }
+
+    function tuyos()
+    {
+        $.post("GetSharedWithMe", {userid: 1}, function (data, status) {
+            $("#lista").html(data);
+        });
+
+    }
+
+
 
 
 
