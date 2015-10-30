@@ -87,7 +87,7 @@ public class DriveModel {
         return files;
     }
 
-    private boolean isValidUser(String correo) throws SQLException {
+    public boolean isValidUser(String correo) throws SQLException {
         String query = "Select COUNT (correo) from Usuario where correo = ?";
         Connection con = Conexion.getConexion();
         PreparedStatement pstm = con.prepareStatement(query);

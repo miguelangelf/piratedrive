@@ -102,7 +102,7 @@
     <body>
         <div id="drophere" style="width: 100%; height: 100%;">
             <div class="container" style="width:100%;">
-                <h1>Pirate Drive</h1>
+                <h1>Asho Drive</h1>
             </div>
 
             <div class="row" style="width:100%; height: 90.7%; margin: 0;">
@@ -117,7 +117,9 @@
                 </div>
                 <div class="twins col-lg-10 col-md-10 col-xs-9">
                     <div id="lista"></div>
-                    <div style="position: fixed; bottom: 0; right:0; width: inherit; height: inherit; background-color: transparent"></div>
+                    <div 
+                        style="position: fixed; bottom: 0; right:0; width: inherit; height: inherit; background-color: transparent; z-index: -1;">
+                    </div>
                 </div>
             </div>
 

@@ -27,17 +27,13 @@
             <div id="overlay"></div>
             <div id="main">
 
-                <%
-                    if (request.getAttribute("resultado") == "error") {
-                %>
-                <div id="msgok" class="alert alert-danger" role="alert">Usuario o Contraseña incorrecta</div>
-                <%
-                    }
-                %>
-
                 <header id="header">
-                    <h1>Gugle Drive</h1>
-                    <p></p>
+                    <h1>Asho Drives</h1>
+                    <br><br>
+                    <% if (request.getAttribute("resultado") == "error") { %>
+                    <p id="msgok" class="alert alert-danger" role="alert">Usuario o Contraseña incorrecta</p>
+                    <% }%>
+                    
                     <form class="form-horizontal" method="POST" action="Login">
 
                         <div class="form-group" style="margin-left: 30%; margin-right: 30%;">
@@ -46,7 +42,7 @@
                                 <input type="email" class="form-control" name="correo" id="correo" placeholder="user@place.com">
                             </div>
                         </div>
-                        
+
                         <div class="form-group" style="margin-left: 30%; margin-right: 30%;">
                             <label for="pass" class="col-sm-2 control-label">Password</label>
                             <div class="col-sm-10">
