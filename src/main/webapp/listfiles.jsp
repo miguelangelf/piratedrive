@@ -9,7 +9,7 @@
 
     if (session.getAttribute("userid") == null) {
 
-        //response.sendRedirect(response.encodeRedirectURL("index.jsp"));
+        response.sendRedirect(response.encodeRedirectURL("index.jsp"));
     }
 %>
 
@@ -113,7 +113,7 @@
                     <button type="button" onclick="mios();" class="btn btn-default side">Unidad</button>
                     <button type="button" onclick="tuyos();" class="btn btn-default side">Compartido</button>
                     <div style="background-color: transparent; height: 20px;"></div>
-                    <button href="DestroySession" type="button" class="btn btn-danger" style="width: 80%; margin-left: 10%; margin-right: 10%;">Log Off</button>
+                    <form action="DestroySession"><button href="DestroySession" type="submit" class="btn btn-danger" style="width: 80%; margin-left: 10%; margin-right: 10%;">Log Off</button></form>
                 </div>
                 <div class="twins col-lg-10 col-md-10 col-xs-9">
                     <div id="lista"></div>

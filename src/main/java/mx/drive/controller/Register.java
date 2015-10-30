@@ -24,31 +24,27 @@ public class Register extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         String correo = request.getParameter("correo");
         String password = request.getParameter("password");
         boolean validuser = false;
 
         mx.drive.dao.DriveModel model = new mx.drive.dao.DriveModel();
-        try{
+        try {
             validuser = model.isValidUser(correo);
-        }catch(Exception e){
-            
+        } catch (Exception e) {
         }
         if (validuser) {
             request.setAttribute("resultado", "existe");
-        }
-
-        try (PrintWriter out = response.getWriter()) {
-            if (validuser) {
-                request.setAttribute("resultado", "ok");
-                request.getRequestDispatcher("listfiles.jsp").forward(request, response);
-            } else {
-                request.setAttribute("resultado", "error");
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+        } else {
+            try {
+                if (model.NewUser(correo, password)) request.setAttribute("resultado", "created");
+                else request.setAttribute("resultado", "nohecho");
+            }catch(Exception e){
+                request.setAttribute("resultado", "nohecho");
             }
-
         }
+        request.getRequestDispatcher("index.jsp").forward(request, response);
 
     }
 

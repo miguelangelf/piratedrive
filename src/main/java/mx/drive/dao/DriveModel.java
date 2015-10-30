@@ -97,7 +97,22 @@ public class DriveModel {
             cantidad++;
         }
         return cantidad == 1;
-
+    }
+    
+    public boolean NewUser(String correo, String password) throws SQLException {
+        String query = "insert into Usuario values(?,?,?)";
+        Connection con = Conexion.getConexion();
+        try {
+            PreparedStatement pstm = con.prepareStatement(query);
+            pstm.setNull(1,Types.INTEGER);
+            pstm.setString(2, correo);
+            pstm.setString(3, password);
+            pstm.execute();
+            return true;
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return false;
+        }
     }
 
     public boolean insertFile(BeanDescriptor bdr) {
