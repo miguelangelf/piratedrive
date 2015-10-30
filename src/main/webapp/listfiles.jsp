@@ -117,7 +117,7 @@
                 </div>
                 <div class="twins col-lg-10 col-md-10 col-xs-9">
                     <div id="lista"></div>
-                    <div style="position: fixed; bottom: 0; right:0; width: inherit; height: 90%; background-color: transparent"></div>
+                    <div style="position: fixed; bottom: 0; right:0; width: inherit; height: inherit; background-color: transparent"></div>
                 </div>
             </div>
 

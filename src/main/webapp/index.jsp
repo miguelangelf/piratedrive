@@ -15,31 +15,64 @@
 %>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script src="js/jquery-2.1.4.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/estilos.css" media="screen" />
         <link href="css/bootstrap.min.css" rel="stylesheet">
-        <title>Index</title>
-
+        <title>Gugle Drive</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="css/main.css" />
     </head>
-    <body >
-        <div class="container">
+    <body class="loading">
+        <div id="wrapper">
+            <div id="bg"></div>
+            <div id="overlay"></div>
+            <div id="main">
 
-            <h1><font color="red"> ¡Bienvenido a AshoDrive!</font></h1>
+                <%
+                    if (request.getAttribute("resultado") == "error") {
+                %>
+                <div id="msgok" class="alert alert-danger" role="alert">Usuario o Contraseña incorrecta</div>
+                <%
+                    }
+                %>
 
-            <%
-                if (request.getAttribute("resultado") == "error") {
-            %>
+                <header id="header">
+                    <h1>Gugle Drive</h1>
+                    <p></p>
+                    <form class="form-horizontal" method="POST" action="Login">
 
-            <div id="msgok" class="alert alert-danger" role="alert">Usuario o Contraseña incorrecta</div>
-            <%
-                }
-            %>
-            <form method="POST" action="Login">
-                <label for="user"> Usuario: </label> <input type="text" name="correo"/>
-                <label for="pass"> Contraseña: </label> <input type="password" name="password"/>               
-                <button class="btn btn-danger" type="submit"> Entrar </button>
-            </form>
+                        <div class="form-group" style="margin-left: 30%; margin-right: 30%;">
+                            <label for="correo" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="correo" id="correo" placeholder="user@place.com">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-left: 30%; margin-right: 30%;">
+                            <label for="pass" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="password" id="pass">
+                            </div>
+                        </div>            
+                        <button class="btn btn-danger" type="submit"> Entrar </button>
+                    </form>
+                </header>
+
+                <footer id="footer">
+                    <span class="copyright">&copy; Untitled. Design: <a href="http://html5up.net">HTML5 UP</a>.</span>
+                </footer>
+
+            </div>
         </div>
+        <script>
+            window.onload = function () {
+                document.body.className = '';
+            }
+            window.ontouchmove = function () {
+                return false;
+            }
+            window.onorientationchange = function () {
+                document.body.scrollTop = 0;
+            }
+        </script>
     </body>
 </html>
