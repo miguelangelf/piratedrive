@@ -122,7 +122,6 @@ public class SaveFileController extends HttpServlet {
             logger.error("Error al realizar el request: " + ex.toString());
         }
         HttpSession session = request.getSession(true);
-
         bdr.setFk_usuario((int) session.getAttribute("userid"));
         logger.info("Se guardo el archivo: " + bdr.getNombre());
 

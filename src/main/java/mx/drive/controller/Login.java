@@ -43,7 +43,6 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession(true);
 
         if (validuser) {
-
             int uid = login.userid;
             session.setAttribute("userid", uid);
         }
